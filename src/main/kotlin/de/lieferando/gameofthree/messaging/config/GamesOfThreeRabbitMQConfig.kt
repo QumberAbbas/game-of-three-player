@@ -32,6 +32,7 @@ internal class GamesOfThreeRabbitMQConfig {
     @Bean(GAME_EXCHANGE)
     fun gameTopicExchange() = DirectExchange(GAME_EXCHANGE)
 
+    @Bean(PLAYER_1_QUEUE)
     fun player1Queue(): Queue {
         return Queue(/* name = */ PLAYER_1_QUEUE, /* durable = */
             true, /* exclusive = */
@@ -40,6 +41,7 @@ internal class GamesOfThreeRabbitMQConfig {
         )
     }
 
+    @Bean(PLAYER_2_QUEUE)
     fun player2Queue(): Queue {
         return Queue(/* name = */ PLAYER_2_QUEUE, /* durable = */
             true, /* exclusive = */
@@ -82,7 +84,7 @@ internal class GamesOfThreeRabbitMQConfig {
     @Bean("gotConnectionFactory")
     fun gotConnectionFactory(): ConnectionFactory {
         return CachingConnectionFactory("rabbitmq-container", 5672).apply {
-            username = "guest"
+            this.username = "guest"
             this.setPassword("guest")
             addConnectionListener(object : ConnectionListener {
                 override fun onCreate(connection: Connection) {
@@ -113,19 +115,11 @@ internal class GamesOfThreeRabbitMQConfig {
         }
     }
 
-    @Bean
-    fun container(connectionFactory: ConnectionFactory, queue: List<Queue>): SimpleMessageListenerContainer {
-        return SimpleMessageListenerContainer().apply {
-            this.connectionFactory = connectionFactory
-            this.setQueueNames(PLAYER_1_QUEUE, PLAYER_2_QUEUE)
-        }
-    }
-
     internal companion object {
         const val GAME_EXCHANGE = "game.exchange"
 
-        const val PLAYER_1_QUEUE = "player1.queue"
-        const val PLAYER_2_QUEUE = "player2.queue"
+        const val PLAYER_1_QUEUE = "player1-queue"
+        const val PLAYER_2_QUEUE = "player2-queue"
 
         const val PLAYER1_ROUTING = "player1"
         const val PLAYER2_ROUTING = "player2"

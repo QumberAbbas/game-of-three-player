@@ -3,17 +3,17 @@ version: '3.8'
 services:
   app:
     image: game-of-3
-    stdin_open: true
-    tty: true
     environment:
       SPRING_PROFILES_ACTIVE: local
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
-      JAVA_OPTS: "-Xmx512m -Xms256m"
+    stdin_open: true
+    tty: true
     ports:
       - "8080:8080"
     networks:
       - app-network
+
 
 networks:
   app-network:
